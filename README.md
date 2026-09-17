@@ -25,7 +25,8 @@ Observed label agreement with Task A:
 - `generate_data.py`: generates input data and task labels
 - `check_task_similarity.py`: checks label agreement between tasks
 - `split_data.py`: creates train, validation, and test splits
+- `model.py`: defines a simple MLP neural network
 
 ## Next step
 
-Build and train the first neural network model.
+Train the MLP on Task A.
