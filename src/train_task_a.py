@@ -5,6 +5,7 @@ import torch.optim as optim
 from generate_data import generate_inputs, generate_labels
 from split_data import split_data
 from model import SimpleMLP
+from evaluate import evaluate
 
 # 1. Generate data
 X = generate_inputs()
@@ -22,16 +23,20 @@ data = split_data(
 # 3. Take Task A data
 X_train = data["X_train"]
 X_val = data["X_val"]
+X_test = data["X_test"]
 
 y_train = data["yA_train"]
 y_val = data["yA_val"]
+y_test = data["yA_test"]
 
 # 4. 转换成Tensor
 X_train = torch.tensor(X_train, dtype=torch.float32)
 X_val = torch.tensor(X_val, dtype=torch.float32)
+X_test = torch.tensor(X_test, dtype=torch.float32)
 
 y_train = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1)  # 增加一个维度，把数据和模型输出的结构保持一致
 y_val = torch.tensor(y_val, dtype=torch.float32).unsqueeze(1)
+y_test = torch.tensor(y_test,dtype=torch.float32).unsqueeze(1)
 
 # 5. Create model
 model = SimpleMLP()
@@ -68,3 +73,29 @@ for epoch in range(num_epochs):
             f"Epoch {epoch + 1:3d}/{num_epochs}, "
             f"Loss: {loss.item():.4f}"
         )
+
+# 9. Validation
+val_loss, val_accuracy = evaluate(
+    model,
+    X_val,
+    y_val,
+    criterion
+)
+
+print(
+    f"Validation Loss: {val_loss:.4f}, "
+    f"Validation Accuracy: {val_accuracy:.4f}"
+)
+
+# 10. Test
+test_loss, test_accuracy = evaluate(
+    model,
+    X_test,
+    y_test,
+    criterion
+)
+
+print(
+    f"Test Loss: {test_loss:.4f}, "
+    f"Test Accuracy: {test_accuracy:.4f}"
+)
